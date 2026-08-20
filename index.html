@@ -3,80 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Site Network Status</title>
+    <title>Game Network Diagnostic Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            padding: 20px;
-        }
-        h1 { color: #00ffcc; }
-        .site-list {
-            margin-top: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f0f12;
+            color: #e2e8f0;
+            padding: 30px;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            align-items: center;
+        }
+        h1 { 
+            color: #38bdf8; 
+            margin-bottom: 5px;
+            font-size: 2rem;
+        }
+        p {
+            color: #94a3b8;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .site-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 450px;
         }
         .site-item {
             display: flex;
             align-items: center;
-            background: #1e1e1e;
-            padding: 15px;
-            border-radius: 8px;
-            width: 300px;
+            background: #1e1e24;
+            padding: 16px;
+            border-radius: 10px;
             justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            border: 1px solid #2e2e38;
             opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.5s ease;
+            transform: translateY(15px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .site-item.visible {
             opacity: 1;
             transform: translateY(0);
         }
         .site-info a {
-            color: #fff;
+            color: #ffffff;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 1.1rem;
         }
-        .site-info a:hover { text-decoration: underline; }
+        .site-info a:hover { 
+            color: #38bdf8;
+            text-decoration: underline; 
+        }
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-text {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
         .status-dot {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background-color: #555; /* Gray while checking */
+            background-color: #475569; /* Gray while checking */
+            transition: background-color 0.3s ease;
         }
-        .status-dot.checking { background-color: #ffcc00; }
-        .status-dot.online { background-color: #00ff66; box-shadow: 0 0 8px #00ff66; }
-        .status-dot.offline { background-color: #ff3333; box-shadow: 0 0 8px #ff3333; }
+        .status-dot.checking { 
+            background-color: #eab308; 
+            box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+        }
+        .status-dot.online { 
+            background-color: #22c55e; 
+            box-shadow: 0 0 12px #22c55e; 
+        }
+        .status-dot.offline { 
+            background-color: #ef4444; 
+            box-shadow: 0 0 12px #ef4444; 
+        }
     </style>
 </head>
 <body>
 
-    <h1>Game Network Tester</h1>
-    <p>Checking which game platforms are accessible on your current Wi-Fi...</p>
+    <h1>Game Network Status</h1>
+    <p>Testing accessibility for browser game platforms on your current Wi-Fi network...</p>
 
     <div class="site-list" id="links-container"></div>
 
     <script>
-        // Your database of game sites (URLs point to their favicons/images for testing)
+        // YOUR DATABASE: Add, remove, or modify game sites here easily!
         const gameSites = [
-            { name: "Poki", url: "https://poki.com", testImg: "https://poki.com" },
-            { name: "CrazyGames", url: "https://crazygames.com", testImg: "https://crazygames.com/favicon.ico" },
-            { name: "Armor Games", url: "https://armorgames.com", testImg: "https://armorgames.com" },
-            { name: "Example Tiny Site", url: "https://example.com", testImg: "https://example.com" }
+            { name: "Poki", url: "https://poki.com" },
+            { name: "CrazyGames", url: "https://www.crazygames.com" },
+            { name: "Armor Games", url: "https://armorgames.com" },
+            { name: "Kongregate", url: "https://kongregate.com" },
+            { name: "Y8 Games", url: "https://y8.com" },
+            { name: "Coolmath Games", url: "https://coolmathgames.com" },
+            { name: "Newgrounds", url: "https://newgrounds.com" },
+            { name: "Voxiom.io", url: "https://voxiom.io" },
+            { name: "iogames.space", url: "https://iogames.space" },
+            { name: "Scratch Games", url: "https://mit.edu" }
         ];
 
         const container = document.getElementById('links-container');
 
-        // Function to handle the slow/staggered loading effect
+        // Staggered loading effect
         async function loadSites() {
             for (let i = 0; i < gameSites.length; i++) {
-                // Wait 800 milliseconds before loading the next site item
-                await new Promise(resolve => setTimeout(resolve, 800));
-                
-                const site = gameSites[i];
-                createSiteElement(site);
+                await new Promise(resolve => setTimeout(resolve, 400)); // Loads a new one every 0.4 seconds
+                createSiteElement(gameSites[i]);
             }
         }
 
@@ -88,44 +131,51 @@
                 <div class="site-info">
                     <a href="${site.url}" target="_blank">${site.name}</a>
                 </div>
-                <div class="status-dot checking" id="dot-${site.name}"></div>
+                <div class="status-container">
+                    <span class="status-text" id="text-${site.name}">Testing</span>
+                    <div class="status-dot checking" id="dot-${site.name}"></div>
+                </div>
             `;
             
             container.appendChild(item);
             
-            // Trigger the CSS animation to slide/fade it in smoothly
+            // Fade and slide in layout item
             setTimeout(() => item.classList.add('visible'), 50);
 
-            // Immediately test this specific site's connection
+            // Run network diagnostic test
             testNetworkConnection(site);
         }
 
-        function testNetworkConnection(site) {
+        async function testNetworkConnection(site) {
             const dot = document.getElementById(`dot-${site.name}`);
-            const img = new Image();
+            const txt = document.getElementById(`text-${site.name}`);
             
-            // If the network lets the image load, it's unblocked
-            img.onload = function() {
+            // Set up a controller to cancel the request if it takes too long
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4500); // 4.5 seconds timeout
+
+            try {
+                // Fetch with 'no-cors' allows us to ping domains without triggering security errors
+                await fetch(site.url, { 
+                    method: 'HEAD', 
+                    mode: 'no-cors', 
+                    signal: controller.signal,
+                    cache: 'no-store'
+                });
+                
+                // If the connection succeeds, it's unblocked!
+                clearTimeout(timeoutId);
                 dot.className = 'status-dot online';
-            };
-            
-            // If the network blocks it or it fails, it's blocked
-            img.onerror = function() {
+                txt.textContent = "Open";
+                txt.style.color = "#22c55e";
+            } catch (error) {
+                // If it fails or times out, the network is blocking it
                 dot.className = 'status-dot offline';
-            };
-
-            // Set a timeout limit (5 seconds). If it takes too long, assume it is blocked.
-            setTimeout(() => {
-                if (dot.classList.contains('checking')) {
-                    dot.className = 'status-dot offline';
-                }
-            }, 5000);
-
-            // Start the test by requesting the image file
-            img.src = site.testImg + "?t=" + new Date().getTime(); // Anti-caching trick
+                txt.textContent = "Blocked";
+                txt.style.color = "#ef4444";
+            }
         }
 
-        // Start the process when the page opens
         window.onload = loadSites;
     </script>
 </body>
