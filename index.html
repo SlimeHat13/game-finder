@@ -72,30 +72,118 @@
     <h1>Game Network Status</h1>
     <p class="subtitle">Checking accessible game platforms on your Wi-Fi...</p>
 
+    <!-- Stats Dashboard Box Counters -->
     <div class="stats-dashboard">
         <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total</div></div>
         <div class="stat-card"><div class="stat-num" style="color:#22c55e" id="stat-open">0</div><div class="stat-label">Open</div></div>
         <div class="stat-card"><div class="stat-num" style="color:#ef4444" id="stat-blocked">0</div><div class="stat-label">Blocked</div></div>
     </div>
 
+    <!-- Search Engine Input Bar Layout Box -->
     <div class="controls">
         <input type="text" class="search-bar" id="search-input" placeholder="Search game sites...">
     </div>
 
+    <!-- Live Site Lists Injection Target -->
     <div class="site-list" id="links-container"></div>
 
     <script>
-        const gameSites = [
-            { name: "Poki", url: "https://poki.com" },
-            { name: "CrazyGames", url: "https://crazygames.com" },
-            { name: "Armor Games", url: "https://armorgames.com" },
+        // PASTE YOUR 93 GAME WEBSITES DIRECTLY BETWEEN THESE BRACKETS:
+        const gameSites = [            { name: "Poki", url: "https://poki.com" },
+            { name: "Crazygames", url: "https://crazygames.com" },
+            { name: "Armorgames", url: "https://armorgames.com" },
             { name: "Kongregate", url: "https://kongregate.com" },
-            { name: "Y8 Games", url: "https://y8.com" },
-            { name: "Coolmath Games", url: "https://coolmathgames.com" },
             { name: "Newgrounds", url: "https://newgrounds.com" },
-            { name: "Voxiom.io", url: "https://voxiom.io" },
-            { name: "iogames.space", url: "https://iogames.space" },
-            { name: "Scratch Games", url: "https://mit.edu" }
+            { name: "Y8", url: "https://y8.com" },
+            { name: "Miniclip", url: "https://miniclip.com" },
+            { name: "Gamedistribution", url: "https://gamedistribution.com" },
+            { name: "Gamepix", url: "https://gamepix.com" },
+            { name: "Silvergames", url: "https://silvergames.com" },
+            { name: "Addictinggames", url: "https://addictinggames.com" },
+            { name: "Kizi", url: "https://kizi.com" },
+            { name: "Friv", url: "https://friv.com" },
+            { name: "Pogo", url: "https://pogo.com" },
+            { name: "Coolmath Games", url: "https://coolmathgames.com" },
+            { name: "Keygames", url: "https://keygames.com" },
+            { name: "Mousebreaker", url: "https://mousebreaker.com" },
+            { name: "Boredgames", url: "https://boredgames.com" },
+            { name: "Agame", url: "https://agame.com" },
+            { name: "Flashgames247", url: "https://flashgames247.com" },
+            { name: "Itch", url: "https://itch.io" },
+            { name: "Gamejolt", url: "https://gamejolt.com" },
+            { name: "Lexaloffle", url: "https://lexaloffle.com" },
+            { name: "Simmer", url: "https://simmer.io" },
+            { name: "Construct", url: "https://construct.net" },
+            { name: "Unity", url: "https://unity.com" },
+            { name: "Gala", url: "https://gala.games" },
+            { name: "Itch Jams", url: "https://itch.io" },
+            { name: "Scirra", url: "https://scirra.com" },
+            { name: "Myabandonware", url: "https://myabandonware.com" },
+            { name: "Classicreload", url: "https://classicreload.com" },
+            { name: "Playclassic", url: "https://playclassic.games" },
+            { name: "Retrogames CC", url: "https://retrogames.cc" },
+            { name: "Dosgames", url: "https://dosgames.com" },
+            { name: "Archive Console", url: "https://archive.org" },
+            { name: "8Bitworkshop", url: "https://8bitworkshop.com" },
+            { name: "Retrogames CZ", url: "https://retrogames.cz" },
+            { name: "Snesfun", url: "https://snesfun.com" },
+            { name: "Nesbox", url: "https://nesbox.com" },
+            { name: "Phaser Sandbox", url: "https://phaser.io" },
+            { name: "Playcanvas", url: "https://playcanvas.com" },
+            { name: "Babylonjs", url: "https://babylonjs.com" },
+            { name: "Defold", url: "https://defold.com" },
+            { name: "Godotengine", url: "https://godotengine.org" },
+            { name: "Gdevelop", url: "https://gdevelop.io" },
+            { name: "Twinery", url: "https://twinery.org" },
+            { name: "Bitsy (Ledoux)", url: "https://itch.io" },
+            { name: "Puzzlescript", url: "https://puzzlescript.net" },
+            { name: "Cocos", url: "https://cocos.com" },
+            { name: "Cookie Clicker", url: "https://dashnet.org" },
+            { name: "Play2048", url: "https://play2048.com" },
+            { name: "Nytimes Games", url: "https://nytimes.com" },
+            { name: "Flappybird", url: "https://flappybird.io" },
+            { name: "Neal Fun", url: "https://neal.fun" },
+            { name: "Slimevolleyball", url: "https://slimevolleyball.com" },
+            { name: "Linerider", url: "https://linerider.com" },
+            { name: "Thewikigame", url: "https://thewikigame.com" },
+            { name: "Geoguessr", url: "https://geoguessr.com" },
+            { name: "Slay One", url: "https://slay.one" },
+            { name: "Littlealchemy2", url: "https://littlealchemy2.com" },
+            { name: "Doublespeakgames", url: "https://doublespeakgames.com" },
+            { name: "Candybox2", url: "https://github.io" },
+            { name: "Frogfractions", url: "https://frogfractions.com" },
+            { name: "Iogames Space", url: "https://iogames.space" },
+            { name: "Agar io", url: "https://agar.io" },
+            { name: "Diep io", url: "https://diep.io" },
+            { name: "Zombsroyale", url: "https://zombsroyale.io" },
+            { name: "Skribbl io", url: "https://skribbl.io" },
+            { name: "Gartic io", url: "https://gartic.io" },
+            { name: "Krunker io", url: "https://krunker.io" },
+            { name: "Slither io", url: "https://slither.io" },
+            { name: "Wings io", url: "https://wings.io" },
+            { name: "Mope io", url: "https://mope.io" },
+            { name: "Ev io", url: "https://ev.io" },
+            { name: "Codingame", url: "https://codingame.com" },
+            { name: "Codecombat", url: "https://codecombat.com" },
+            { name: "Screeps", url: "https://screeps.com" },
+            { name: "Checkio", url: "https://checkio.org" },
+            { name: "Elevatorsaga", url: "https://elevatorsaga.com" },
+            { name: "Flexboxfroggy", url: "https://flexboxfroggy.com" },
+            { name: "Gridgarden", url: "https://gridgarden.com" },
+            { name: "Untrusted Game", url: "https://github.io" },
+            { name: "Vim Adventures", url: "https://vim-adventures.com" },
+            { name: "Cryptozombies", url: "https://cryptozombies.io" },
+            { name: "Chromedino", url: "https://chromedino.com" },
+            { name: "Pointerpointer", url: "https://pointerpointer.com" },
+            { name: "Withgoogle", url: "https://withgoogle.com" },
+            { name: "Theuselessweb", url: "https://theuselessweb.com" },
+            { name: "Decisionproblem", url: "https://decisionproblem.com" },
+            { name: "Sandspiel", url: "https://sandspiel.club" },
+            { name: "Fallingsandgame", url: "https://fallingsandgame.com" },
+            { name: "Spacecompany", url: "https://spacecompany.app" },
+            { name: "Evolve Game", url: "https://github.io" }
+
+            
         ];
 
         let activeStatuses = {}; 
@@ -103,8 +191,9 @@
         document.getElementById('stat-total').textContent = gameSites.length;
 
         async function loadSites() {
+            // High-speed staggered sequence load delay (120ms intervals)
             for (let i = 0; i < gameSites.length; i++) {
-                await new Promise(r => setTimeout(r, 200));
+                await new Promise(r => setTimeout(r, 120));
                 createSiteElement(gameSites[i]);
             }
         }
@@ -114,7 +203,8 @@
             item.className = 'site-item';
             item.setAttribute('data-name', site.name.toLowerCase());
             
-            const safeId = site.name.replace(/\s+/g, '');
+            // Clean unique target elements safety string mappings
+            const safeId = btoa(site.url).replace(/=/g, '').substring(0, 15);
             item.innerHTML = `
                 <div class="site-info"><a href="${site.url}" target="_blank">${site.name}</a></div>
                 <div class="status-container">
@@ -123,7 +213,7 @@
                 </div>
             `;
             container.appendChild(item);
-            setTimeout(() => item.classList.add('visible'), 50);
+            setTimeout(() => item.classList.add('visible'), 30);
             testNetwork(site, safeId);
         }
 
@@ -136,14 +226,18 @@
             try {
                 await fetch(site.url, { method: 'HEAD', mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
                 clearTimeout(timeoutId);
-                dot.className = 'status-dot online';
-                txt.textContent = "Open";
-                txt.style.color = "#22c55e";
+                if (dot && txt) {
+                    dot.className = 'status-dot online';
+                    txt.textContent = "Open";
+                    txt.style.color = "#22c55e";
+                }
                 activeStatuses[site.name] = "open";
             } catch (error) {
-                dot.className = 'status-dot offline';
-                txt.textContent = "Blocked";
-                txt.style.color = "#ef4444";
+                if (dot && txt) {
+                    dot.className = 'status-dot offline';
+                    txt.textContent = "Blocked";
+                    txt.style.color = "#ef4444";
+                }
                 activeStatuses[site.name] = "blocked";
             }
             updateCounters();
@@ -156,9 +250,10 @@
                 if (activeStatuses[n] === "blocked") blocked++;
             }
             document.getElementById('stat-open').textContent = open;
-            document.getElementById('stat-blocked').textContent = blockedCount = blocked;
+            document.getElementById('stat-blocked').textContent = blocked;
         }
 
+        // Live text filter event mapping rules
         document.getElementById('search-input').addEventListener('input', function(e) {
             const val = e.target.value.toLowerCase();
             document.querySelectorAll('.site-item').forEach(item => {
