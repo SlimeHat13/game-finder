@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Site Network Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            padding: 20px;
+        }
+        h1 { color: #00ffcc; }
+        .site-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .site-item {
+            display: flex;
+            align-items: center;
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            width: 300px;
+            justify-content: space-between;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+        .site-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .site-info a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .site-info a:hover { text-decoration: underline; }
+        .status-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #555; /* Gray while checking */
+        }
+        .status-dot.checking { background-color: #ffcc00; }
+        .status-dot.online { background-color: #00ff66; box-shadow: 0 0 8px #00ff66; }
+        .status-dot.offline { background-color: #ff3333; box-shadow: 0 0 8px #ff3333; }
+    </style>
+</head>
+<body>
+
+    <h1>Game Network Tester</h1>
+    <p>Checking which game platforms are accessible on your current Wi-Fi...</p>
+
+    <div class="site-list" id="links-container"></div>
+
+    <script>
+        // Your database of game sites (URLs point to their favicons/images for testing)
+        const gameSites = [
+            { name: "Poki", url: "https://poki.com", testImg: "https://poki.com" },
+            { name: "CrazyGames", url: "https://crazygames.com", testImg: "https://crazygames.com/favicon.ico" },
+            { name: "Armor Games", url: "https://armorgames.com", testImg: "https://armorgames.com" },
+            { name: "Example Tiny Site", url: "https://example.com", testImg: "https://example.com" }
+        ];
+
+        const container = document.getElementById('links-container');
+
+        // Function to handle the slow/staggered loading effect
+        async function loadSites() {
+            for (let i = 0; i < gameSites.length; i++) {
+                // Wait 800 milliseconds before loading the next site item
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                const site = gameSites[i];
+                createSiteElement(site);
+            }
+        }
+
+        function createSiteElement(site) {
+            const item = document.createElement('div');
+            item.className = 'site-item';
+            
+            item.innerHTML = `
+                <div class="site-info">
+                    <a href="${site.url}" target="_blank">${site.name}</a>
+                </div>
+                <div class="status-dot checking" id="dot-${site.name}"></div>
+            `;
+            
+            container.appendChild(item);
+            
+            // Trigger the CSS animation to slide/fade it in smoothly
+            setTimeout(() => item.classList.add('visible'), 50);
+
+            // Immediately test this specific site's connection
+            testNetworkConnection(site);
+        }
+
+        function testNetworkConnection(site) {
+            const dot = document.getElementById(`dot-${site.name}`);
+            const img = new Image();
+            
+            // If the network lets the image load, it's unblocked
+            img.onload = function() {
+                dot.className = 'status-dot online';
+            };
+            
+            // If the network blocks it or it fails, it's blocked
+            img.onerror = function() {
+                dot.className = 'status-dot offline';
+            };
+
+            // Set a timeout limit (5 seconds). If it takes too long, assume it is blocked.
+            setTimeout(() => {
+                if (dot.classList.contains('checking')) {
+                    dot.className = 'status-dot offline';
+                }
+            }, 5000);
+
+            // Start the test by requesting the image file
+            img.src = site.testImg + "?t=" + new Date().getTime(); // Anti-caching trick
+        }
+
+        // Start the process when the page opens
+        window.onload = loadSites;
+    </script>
+</body>
+</html>
