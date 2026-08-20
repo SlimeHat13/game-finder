@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Network Diagnostic Dashboard</title>
+    <title>Game Network Hub</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #0f0f12;
             color: #e2e8f0;
             padding: 30px;
@@ -15,94 +15,79 @@
             flex-direction: column;
             align-items: center;
         }
-        h1 { 
-            color: #38bdf8; 
-            margin-bottom: 5px;
-            font-size: 2rem;
-        }
-        p {
-            color: #94a3b8;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .site-list {
+        h1 { color: #38bdf8; margin-bottom: 5px; }
+        .subtitle { color: #94a3b8; margin-bottom: 25px; }
+        .stats-dashboard {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 25px;
             width: 100%;
             max-width: 450px;
         }
+        .stat-card {
+            background: #1e1e24;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            border: 1px solid #2e2e38;
+        }
+        .stat-num { font-size: 1.3rem; font-weight: bold; }
+        .stat-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; }
+        .controls { width: 100%; max-width: 450px; margin-bottom: 20px; }
+        .search-bar {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #2e2e38;
+            background: #1e1e24;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .site-list { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 450px; }
         .site-item {
             display: flex;
             align-items: center;
             background: #1e1e24;
-            padding: 16px;
+            padding: 15px;
             border-radius: 10px;
             justify-content: space-between;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
             border: 1px solid #2e2e38;
             opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(10px);
+            transition: all 0.4s ease;
         }
-        .site-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .site-info a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .site-info a:hover { 
-            color: #38bdf8;
-            text-decoration: underline; 
-        }
-        .status-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .status-text {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-        }
-        .status-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color: #475569; /* Gray while checking */
-            transition: background-color 0.3s ease;
-        }
-        .status-dot.checking { 
-            background-color: #eab308; 
-            box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
-        }
-        .status-dot.online { 
-            background-color: #22c55e; 
-            box-shadow: 0 0 12px #22c55e; 
-        }
-        .status-dot.offline { 
-            background-color: #ef4444; 
-            box-shadow: 0 0 12px #ef4444; 
-        }
+        .site-item.visible { opacity: 1; transform: translateY(0); }
+        .site-info a { color: #fff; text-decoration: none; font-weight: bold; }
+        .site-info a:hover { color: #38bdf8; }
+        .status-container { display: flex; align-items: center; gap: 8px; }
+        .status-text { font-size: 0.8rem; color: #64748b; }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background-color: #475569; }
+        .status-dot.online { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .status-dot.offline { background-color: #ef4444; box-shadow: 0 0 8px #ef4444; }
     </style>
 </head>
 <body>
 
     <h1>Game Network Status</h1>
-    <p>Testing accessibility for browser game platforms on your current Wi-Fi network...</p>
+    <p class="subtitle">Checking accessible game platforms on your Wi-Fi...</p>
+
+    <div class="stats-dashboard">
+        <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#22c55e" id="stat-open">0</div><div class="stat-label">Open</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#ef4444" id="stat-blocked">0</div><div class="stat-label">Blocked</div></div>
+    </div>
+
+    <div class="controls">
+        <input type="text" class="search-bar" id="search-input" placeholder="Search game sites...">
+    </div>
 
     <div class="site-list" id="links-container"></div>
 
     <script>
-        // YOUR DATABASE: Add, remove, or modify game sites here easily!
         const gameSites = [
             { name: "Poki", url: "https://poki.com" },
-            { name: "CrazyGames", url: "https://www.crazygames.com" },
+            { name: "CrazyGames", url: "https://crazygames.com" },
             { name: "Armor Games", url: "https://armorgames.com" },
             { name: "Kongregate", url: "https://kongregate.com" },
             { name: "Y8 Games", url: "https://y8.com" },
@@ -113,12 +98,13 @@
             { name: "Scratch Games", url: "https://mit.edu" }
         ];
 
+        let activeStatuses = {}; 
         const container = document.getElementById('links-container');
+        document.getElementById('stat-total').textContent = gameSites.length;
 
-        // Staggered loading effect
         async function loadSites() {
             for (let i = 0; i < gameSites.length; i++) {
-                await new Promise(resolve => setTimeout(resolve, 400)); // Loads a new one every 0.4 seconds
+                await new Promise(r => setTimeout(r, 200));
                 createSiteElement(gameSites[i]);
             }
         }
@@ -126,55 +112,59 @@
         function createSiteElement(site) {
             const item = document.createElement('div');
             item.className = 'site-item';
+            item.setAttribute('data-name', site.name.toLowerCase());
             
+            const safeId = site.name.replace(/\s+/g, '');
             item.innerHTML = `
-                <div class="site-info">
-                    <a href="${site.url}" target="_blank">${site.name}</a>
-                </div>
+                <div class="site-info"><a href="${site.url}" target="_blank">${site.name}</a></div>
                 <div class="status-container">
-                    <span class="status-text" id="text-${site.name}">Testing</span>
-                    <div class="status-dot checking" id="dot-${site.name}"></div>
+                    <span class="status-text" id="text-${safeId}">Testing</span>
+                    <div class="status-dot" id="dot-${safeId}"></div>
                 </div>
             `;
-            
             container.appendChild(item);
-            
-            // Fade and slide in layout item
             setTimeout(() => item.classList.add('visible'), 50);
-
-            // Run network diagnostic test
-            testNetworkConnection(site);
+            testNetwork(site, safeId);
         }
 
-        async function testNetworkConnection(site) {
-            const dot = document.getElementById(`dot-${site.name}`);
-            const txt = document.getElementById(`text-${site.name}`);
-            
-            // Set up a controller to cancel the request if it takes too long
+        async function testNetwork(site, safeId) {
+            const dot = document.getElementById(`dot-${safeId}`);
+            const txt = document.getElementById(`text-${safeId}`);
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4500); // 4.5 seconds timeout
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
 
             try {
-                // Fetch with 'no-cors' allows us to ping domains without triggering security errors
-                await fetch(site.url, { 
-                    method: 'HEAD', 
-                    mode: 'no-cors', 
-                    signal: controller.signal,
-                    cache: 'no-store'
-                });
-                
-                // If the connection succeeds, it's unblocked!
+                await fetch(site.url, { method: 'HEAD', mode: 'no-cors', signal: controller.signal, cache: 'no-store' });
                 clearTimeout(timeoutId);
                 dot.className = 'status-dot online';
                 txt.textContent = "Open";
                 txt.style.color = "#22c55e";
+                activeStatuses[site.name] = "open";
             } catch (error) {
-                // If it fails or times out, the network is blocking it
                 dot.className = 'status-dot offline';
                 txt.textContent = "Blocked";
                 txt.style.color = "#ef4444";
+                activeStatuses[site.name] = "blocked";
             }
+            updateCounters();
         }
+
+        function updateCounters() {
+            let open = 0, blocked = 0;
+            for (let n in activeStatuses) {
+                if (activeStatuses[n] === "open") open++;
+                if (activeStatuses[n] === "blocked") blocked++;
+            }
+            document.getElementById('stat-open').textContent = open;
+            document.getElementById('stat-blocked').textContent = blockedCount = blocked;
+        }
+
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            const val = e.target.value.toLowerCase();
+            document.querySelectorAll('.site-item').forEach(item => {
+                item.style.display = item.getAttribute('data-name').includes(val) ? 'flex' : 'none';
+            });
+        });
 
         window.onload = loadSites;
     </script>
